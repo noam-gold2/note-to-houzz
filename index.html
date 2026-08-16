@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A note to Houzz — Noam Gold</title>
+<meta name="description" content="Not a portfolio. A few more words for the Houzz hiring team, from Noam Gold." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #F5F0E6;
+    --paper-2: #EFE8D9;
+    --ink: #2A2622;
+    --ink-soft: #5A5248;
+    --blueprint: #1E4B5E;
+    --blueprint-line: rgba(30, 75, 94, 0.16);
+    --clay: #B85C38;
+    --gold: #C89B3C;
+    --max: 720px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    position: relative;
+  }
+
+  /* faint grid only in the outer margins, never behind the text column */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--blueprint-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px);
+    background-size: 34px 34px;
+    background-position: -1px -1px;
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 14%, transparent 30%);
+    mask-image: linear-gradient(90deg, #000 0%, #000 14%, transparent 30%);
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @media (max-width: 640px) {
+    body::before {
+      -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 6%, transparent 16%);
+      mask-image: linear-gradient(90deg, #000 0%, #000 6%, transparent 16%);
+      opacity: 0.4;
+    }
+  }
+
+  .wrap { position: relative; z-index: 1; }
+
+  /* --- blueprint ruler: a vertical line + tick marks that draws down as you scroll --- */
+  .ruler {
+    position: fixed;
+    top: 0;
+    left: max(22px, calc((100vw - var(--max)) / 2 - 46px));
+    width: 46px;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    display: block;
+  }
+  @media (max-width: 900px) {
+    .ruler { left: 10px; width: 30px; }
+  }
+  @media (max-width: 560px) {
+    .ruler { display: none; }
+  }
+  .ruler .track {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 1.5px;
+    height: 100%;
+    background: var(--blueprint-line);
+    transform: translateX(-50%);
+  }
+  .ruler .drawn {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 1.5px;
+    height: 100%;
+    background: var(--blueprint);
+    transform: translateX(-50%) scaleY(var(--draw, 0));
+    transform-origin: top;
+    opacity: 0.5;
+    transition: transform 0.1s linear;
+  }
+  .ruler .ticks {
+    position: absolute;
+    inset: 0;
+  }
+
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: clamp(28px, 6vw, 72px) clamp(22px, 5vw, 40px) 80px;
+  }
+
+  /* --- opening hook --- */
+  .hook {
+    padding-top: clamp(24px, 8vh, 90px);
+    opacity: 0;
+    transform: translateY(14px);
+    animation: rise 0.9s cubic-bezier(.2,.7,.2,1) 0.1s forwards;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--blueprint);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 26px; height: 1px;
+    background: var(--blueprint);
+    display: inline-block;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(38px, 8vw, 68px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  h1 .strike {
+    position: relative;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  h1 .strike::after {
+    content: "";
+    position: absolute;
+    left: -2px; right: -2px; top: 54%;
+    height: 4px;
+    background: var(--clay);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: strike 0.6s cubic-bezier(.6,0,.2,1) 1s forwards;
+    border-radius: 2px;
+  }
+  h1 .fix {
+    color: var(--clay);
+  }
+
+  .hook-sub {
+    font-size: clamp(19px, 2.6vw, 23px);
+    color: var(--ink-soft);
+    max-width: 30em;
+    margin-top: 4px;
+  }
+  .hook-sub .wink { font-style: italic; }
+
+  .scroll-cue {
+    margin-top: 54px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: fade 0.8s ease 1.6s forwards;
+  }
+  .scroll-cue .arrow {
+    display: inline-block;
+    animation: bob 1.8s ease-in-out infinite;
+  }
+
+  /* --- reveal-on-scroll --- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* --- letter body --- */
+  .letter { margin-top: clamp(70px, 14vh, 130px); }
+
+  .letter p {
+    margin-bottom: 26px;
+  }
+  .letter .lead {
+    font-size: clamp(21px, 3vw, 26px);
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    line-height: 1.42;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .letter strong {
+    font-weight: 500;
+    color: var(--ink);
+    background: linear-gradient(transparent 62%, rgba(200,155,60,0.28) 62%);
+  }
+
+  .rule {
+    width: 100%; height: 1px;
+    background: var(--blueprint-line);
+    border: 0;
+    margin: 46px 0;
+  }
+
+  /* --- the three "confessions" (Houzz values) --- */
+  .why-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blueprint);
+    margin-bottom: 26px;
+  }
+
+  .why {
+    display: grid;
+    gap: 2px;
+    margin: 8px 0 10px;
+    border-top: 1px solid var(--blueprint-line);
+  }
+  .why-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(14px, 4vw, 34px);
+    align-items: baseline;
+    padding: 22px 4px;
+    border-bottom: 1px solid var(--blueprint-line);
+  }
+  .why-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--clay);
+    white-space: nowrap;
+    padding-top: 8px;
+  }
+  .why-text {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(19px, 2.5vw, 23px);
+    line-height: 1.34;
+    font-weight: 400;
+  }
+  .why-text b { font-weight: 600; }
+  .why-text span {
+    display: block;
+    font-family: 'Newsreader', serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin-top: 5px;
+  }
+
+  /* --- signature + cta --- */
+  .sign {
+    margin-top: 40px;
+  }
+  .sign .off {
+    font-size: 18px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .sign .name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 27px;
+    color: var(--ink);
+  }
+  .sign .role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blueprint);
+    margin-top: 8px;
+  }
+
+  .cta {
+    margin-top: 44px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    padding: 14px 24px;
+    border-radius: 40px;
+    transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+    display: inline-block;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn-primary {
+    background: var(--blueprint);
+    color: var(--paper);
+  }
+  .btn-primary:hover { background: #163b49; }
+  .btn-ghost {
+    border: 1px solid var(--blueprint-line);
+    color: var(--ink);
+  }
+  .btn-ghost:hover { border-color: var(--blueprint); }
+
+  .contactline {
+    margin-top: 30px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+  .contactline a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--blueprint-line); }
+  .contactline a:hover { color: var(--blueprint); }
+
+  .footnote {
+    margin-top: 60px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: 0.7;
+  }
+
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  @keyframes fade { to { opacity: 1; } }
+  @keyframes strike { to { transform: scaleX(1); } }
+  @keyframes bob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(4px);} }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hook, .scroll-cue, .reveal { opacity: 1 !important; transform: none !important; animation: none !important; }
+    h1 .strike::after { transform: scaleX(1); animation: none; }
+    .scroll-cue .arrow { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+  <div class="ruler" aria-hidden="true">
+    <div class="track"></div>
+    <div class="drawn"></div>
+    <div class="ticks"></div>
+  </div>
+  <main class="wrap">
+
+    <section class="hook">
+      <div class="eyebrow">A note to the Houzz hiring team</div>
+      <h1>This is not<br /><span class="strike">a portfolio</span>.</h1>
+      <p class="hook-sub">I know. <span class="wink">That wasn't what this link was supposed to be.</span> But there was no place to attach a cover letter, and I had a few more words for you. So I built somewhere to put them.</p>
+      <div class="scroll-cue"><span class="arrow">&darr;</span> keep reading</div>
+    </section>
+
+    <section class="letter">
+      <p class="lead reveal">Here's why this one is personal.</p>
+
+      <p class="reveal">I grew up in the home of a construction project manager and site supervisor, later a developer abroad. I watched the work up close, and I saw exactly where it got stuck: payments, change orders, who owed what to whom, and no clear picture of any of it.</p>
+
+      <p class="reveal">Years later, as a consultant, I built the thing I'd watched them need. For a firm building luxury homes, projects worth <strong>&#8362;5&ndash;30M</strong> with dozens of vendors each, I built a system that tracked every payment request from vendor to developer. Clear statuses, and a dashboard showing what was paid, pending, and outstanding, down to each vendor. It worked well enough that we replicated it across ~15 more clients.</p>
+
+      <p class="reveal">That's Houzz Pro, more or less. Built by hand, because the pros I knew had no better option. So when I read this role, owning the document journey from estimate to paid invoice, tracking how change orders hit margins, I'm not learning the problem. I've lived it from both sides: the contractor's frustration and the builder's tool.</p>
+
+      <hr class="rule reveal" />
+
+      <div class="reveal">
+        <div class="why-eyebrow">Let's look at this little thing the way you look at the world</div>
+        <div class="why">
+          <div class="why-row">
+            <div class="why-tag">Exhibit A</div>
+            <div class="why-text"><b>I challenged the status quo.</b><span>A PDF felt like the wrong way to say something that isn't a PDF kind of thing.</span></div>
+          </div>
+          <div class="why-row">
+            <div class="why-tag">Exhibit B</div>
+            <div class="why-text"><b>I'm a self-starter.</b><span>No cover-letter field, no problem. I made one. This whole page took an evening, built with AI, the same way I ship my own products.</span></div>
+          </div>
+          <div class="why-row">
+            <div class="why-tag">Exhibit C</div>
+            <div class="why-text"><b>I play to win.</b><span>If I want a role this much, I'd rather show you how I work than tell you about it.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="rule reveal" />
+
+      <p class="reveal">The rest of my background is product and P&amp;L: business metrics across global eCommerce brands, discovery from raw user input, and PRDs, backlogs, and sprint cycles alongside product teams. I read a workflow as its business outcome, not just its screens.</p>
+
+      <p class="reveal">A practical note: I'm in Portugal and have worked remotely with global teams for years. I'm available for travel and on-site time in Israel, and open to flexible hours, an 8am coffee or a 10pm tea, whatever the team needs.</p>
+
+      <p class="reveal">Houzz was built by people who hit this exact problem in their own home and fixed it for everyone. I came to it the same way.</p>
+
+      <div class="sign reveal">
+        <div class="off">I'd love to talk,</div>
+        <div class="name">Noam Gold</div>
+        <div class="role">Product Manager</div>
+      </div>
+
+      <div class="cta reveal">
+        <a class="btn btn-primary" href="https://wa.me/972525662929" target="_blank" rel="noopener">Let's talk &rarr;</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/noamgold360" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+
+      <div class="contactline reveal">
+        <a href="mailto:noamgold2@gmail.com">noamgold2@gmail.com</a>
+        <span>+972 52 566 2929</span>
+        <span>+351 961 934 885</span>
+      </div>
+
+      <div class="footnote reveal">Built by hand &middot; Not a portfolio &middot; 2026</div>
+    </section>
+
+  </main>
+
+  <script>
+    // reveal-on-scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+    // blueprint ruler: build tick marks + labels, then draw the line down on scroll
+    const ticksEl = document.querySelector('.ruler .ticks');
+    const drawnEl = document.querySelector('.ruler .drawn');
+    if (ticksEl) {
+      const svgNS = 'http://www.w3.org/2000/svg';
+      // ticks are spaced every 68px down the viewport height, redrawn on resize
+      function buildTicks() {
+        ticksEl.innerHTML = '';
+        const h = window.innerHeight;
+        const step = 68;
+        for (let y = 40; y < h; y += step) {
+          const major = ((y - 40) / step) % 3 === 0;
+          const t = document.createElement('div');
+          t.style.position = 'absolute';
+          t.style.top = y + 'px';
+          t.style.left = '50%';
+          t.style.height = '1.5px';
+          t.style.width = major ? '14px' : '7px';
+          t.style.background = 'var(--blueprint-line)';
+          t.style.transform = 'translateX(-50%)';
+          ticksEl.appendChild(t);
+        }
+      }
+      buildTicks();
+      window.addEventListener('resize', buildTicks);
+
+      let ticking = false;
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const doc = document.documentElement;
+          const max = doc.scrollHeight - window.innerHeight;
+          const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+          drawnEl.style.setProperty('--draw', p.toFixed(4));
+          ticking = false;
+        });
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+  </script>
+</body>
+</html>
